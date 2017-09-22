@@ -13,10 +13,23 @@ SKLEARN_VERBS = (
 import sklearn.base as sb
 
 class Pipe(object):
+    """Pipe class.
+
+    An instance of this class can hold a number of Segments and in whole forms the pipeline.
+    """
+
     def __init__(self):
         self.segments = []
-
     def __add__(self, segment):
+        """Internal function, will be called when adding a Segment to the Pipe by using the '+' operator.
+
+        Args:
+            segment: An instance of Segment, this can contain any type of callable. A callable non-Segment object
+                will be automatically encapsulated by a Segment.
+
+        Returns: the Pipe instance
+
+        """
 
         if not isinstance(segment, Segment):
 
@@ -137,6 +150,15 @@ class Pipe(object):
 
 
 class Segment(object):
+    """The Segment class can hold any callable object.
+
+            Args:
+                obj: a callable object
+                description: an optional description of the segment/object
+                args: additional \*args which should always be passed to the object when called
+                kwargs: additional \**kwargs which should always be passed to the object when called
+
+    """
     def __init__(self, obj, description='anonymous segment', *args, **kwargs):
         self.obj = obj
         self.description = description
@@ -165,72 +187,5 @@ class Segment(object):
             # return main object if attrs isn't found (and assume it is callable)
             return getattr(self.obj, '__call__')
 
-def dummy(*args):
-    return args
-
 if __name__ == '__main__':
-    from src.mlpipe import Pipe, Segment
-
-
-
-    p = Pipe() + \
-        Segment(lambda x: x + 1, "step1") + \
-        Segment(lambda x: x + 1, "step2")
-
-    print(p)
-
-    # print(888, p._dumps())
-
-    # p = Pipe() +\
-    #     Segment(lambda x: x + 2, "step1") + \
-    #     Segment(lambda x: x + 3) + \
-    #     Segment(lambda x: x + 1, "another step")
-    #
-    # print(p)
-    # print(p.bla(4))
-    # print(p(4))
-    #
-    #
-    #
-    # from sklearn import svm
-    # from sklearn.datasets import samples_generator
-    # from sklearn.feature_selection import SelectKBest
-    # from sklearn.feature_selection import f_regression
-    #
-    # # generate some data to play with
-    # X, y = samples_generator.make_classification(
-    #     n_informative=5, n_redundant=0, random_state=42)
-    # # ANOVA SVM-C
-    # anova_filter = SelectKBest(f_regression, k=5)
-    # # print(dir(anova_filter))
-    # clf = svm.SVC(kernel='linear')
-    # # anova_svm = Pipeline([('anova', anova_filter), ('svc', clf)])
-    # # You can set the parameters using the names issued
-    # # For instance, fit using a k of 10 in the SelectKBest
-    # # and a parameter 'C' of the svm
-    # # anova_svm.set_params(anova__k=10, svc__C=.1).fit(X, y)
-    #
-    # # prediction = anova_svm.predict(X)
-    # # anova_svm.score(X, y)
-    # #
-    # # # getting the selected features chosen by anova_filter
-    # # anova_svm.named_steps['anova'].get_support()
-    # #
-    # # # Another way to get selected features chosen by anova_filter
-    # # anova_svm.named_steps.anova.get_support()
-    #
-    # p2 = Pipe() +\
-    #     Segment(anova_filter, 'anova') +\
-    #     Segment(dummy) +\
-    #     Segment(clf, 'svc')
-    #
-    # print(p2)
-    # print(p2.segments[0].obj.__class__)
-    # print(issubclass(p2.segments[0].obj.__class__, sb.BaseEstimator), 999)
-    # print(1111, p._is_sklearn_obj(anova_filter), p._is_sklearn_obj(lambda x: 3))
-    # print(p2.fit(X, y))
-    # print("fit finished")
-    #
-    # print(p2.predict(X))
-    #
-
+    pass

@@ -1,1 +1,1 @@
-from src.mlpipe.pipeline import Pipe, Segment
+from .pipeline import Pipe, Segment
