@@ -1,4 +1,4 @@
-from src.mlpipe import Pipe, Segment
+from mlpipe import Pipe, Segment
 
 def test_lambda1_wo_attr():
     p = Pipe() +\

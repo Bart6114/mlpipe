@@ -1,4 +1,4 @@
-from src.mlpipe import Pipe, Segment
+from mlpipe import Pipe, Segment
 import os
 
 import pytest

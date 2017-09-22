@@ -1,4 +1,4 @@
-from src.mlpipe import Pipe, Segment
+from mlpipe import Pipe, Segment
 
 from sklearn import svm
 from sklearn.datasets import samples_generator

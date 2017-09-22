@@ -1,4 +1,4 @@
-from src.mlpipe import Pipe
+from mlpipe import Pipe
 import pytest
 
 def test_error_non_callable():
