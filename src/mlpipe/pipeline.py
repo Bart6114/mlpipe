@@ -178,12 +178,11 @@ class Segment(object):
                 kwargs: additional \**kwargs which should always be passed to the object when called
 
     """
-    def __init__(self, obj, description='anonymous segment', *args, **kwargs):
+    def __init__(self, obj, description='anonymous segment', **kwargs):
         self.obj = obj
         self.description = description
         self.pipe = None
 
-        self.args = args
         self.kwargs = kwargs
 
     def _set_pipe(self, pipe):
@@ -193,7 +192,7 @@ class Segment(object):
         return self.description
 
     def __call__(self, *args, **kwargs):
-        return self.obj(*args, **kwargs)
+        return partial(self.obj, **self.kwargs)(*args, **kwargs)
 
     def __getattr__(self, name):
 
@@ -201,10 +200,10 @@ class Segment(object):
             return super(Segment, self).__getattr__(name)
 
         if hasattr(self.obj, name):
-            return getattr(self.obj, name)
+            return partial(getattr(self.obj, name),**self.kwargs)
         else:
             # return main object if attrs isn't found (and assume it is callable)
-            return getattr(self.obj, '__call__')
+            return partial(getattr(self.obj, '__call__'),  **self.kwargs)
 
 if __name__ == '__main__':
     pass

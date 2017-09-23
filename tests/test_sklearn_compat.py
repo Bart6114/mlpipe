@@ -42,3 +42,17 @@ def test_sklearn_pipe_fit_predict1_dummy():
 
     p.fit(X,y)
     p.predict(X, y=None)
+
+
+def test_sklearn_pipe_serialize():
+
+    def dummy(*args):
+        return args
+
+    p = Pipe() +\
+        Segment(anova_filter, 'anova') +\
+        Segment(dummy) +\
+        Segment(clf, 'svc')
+
+    p.fit(X,y)
+    p.predict(X, y=None)
