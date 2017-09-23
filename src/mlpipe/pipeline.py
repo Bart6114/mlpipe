@@ -1,5 +1,7 @@
 from functools import partial, reduce
 import dill
+import warnings
+import os
 
 SKLEARN_VERBS = (
     'fit',
@@ -10,7 +12,18 @@ SKLEARN_VERBS = (
     'score',
 )
 
-import sklearn.base as sb
+
+try:
+    if os.environ.get('MLPIPE_WITHOUT_SKLEARN') is not None:
+        raise ImportError
+    else:
+        import sklearn.base
+        SKLEARN_AVAILABLE = True
+
+except ImportError:
+    SKLEARN_AVAILABLE = False
+    warnings.warn("optional 'sklearn' dependency not available", ImportWarning)
+
 
 class Pipe(object):
     """Pipe class.
@@ -71,9 +84,14 @@ class Pipe(object):
 
     def __eval(self, attr, *args, **kwargs):
 
-        if attr in SKLEARN_VERBS:
+        if attr in SKLEARN_VERBS and SKLEARN_AVAILABLE:
             # dispatch to sklearn compatible pipe evaluator
             return self.__eval_sk_style(attr, *args)
+
+        elif attr in SKLEARN_VERBS and not SKLEARN_AVAILABLE:
+            warnings.warn('sklearn warning: \'{}\' seems to be an sklearn verb, but sklearn is not available,'
+                          'continuing processing without sklearn logic'.format(attr), UserWarning)
+
 
         for i, segment in enumerate(self.segments):
             args = getattr(segment, attr)(*args)
@@ -129,7 +147,8 @@ class Pipe(object):
             return output
 
     def __is_sklearn_obj(self, obj):
-        return issubclass(obj.__class__, (sb.BaseEstimator, sb.TransformerMixin, ))
+        return issubclass(obj.__class__, (sklearn.base.BaseEstimator,
+                                          sklearn.base.TransformerMixin, ))
 
     @classmethod
     def _load(cls, filename):

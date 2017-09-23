@@ -6,7 +6,6 @@ import pytest
 @pytest.fixture(scope='module')
 def resource_tmp_file(request):
     tmp_filename = 'test.pkl'
-    print(tmp_filename)
     def resource_tmp_file_teardown():
         os.remove(tmp_filename)
     request.addfinalizer(resource_tmp_file_teardown)
