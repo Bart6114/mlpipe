@@ -2,12 +2,14 @@ from setuptools import setup
 
 install_requires = [
     'dill',
+    ]
+
+tests_require = [
     'sklearn',
     'numpy',
     'scipy',
     'scikit-learn',
-    ]
-
+]
 
 setup(name='mlpipe',
       version='0.1',
@@ -19,4 +21,5 @@ setup(name='mlpipe',
       package_dir={'mlpipe': 'src/mlpipe'},
       packages=['mlpipe'],
       zip_safe=False,
-      install_requires=install_requires)
+      install_requires=install_requires,
+      tests_require=tests_require)
