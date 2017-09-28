@@ -72,7 +72,8 @@ class Pipe(object):
         else:
             return partial(self.__eval, name)
 
-    def __call__(self, *args,  attr='__call__', **kwargs):
+    def __call__(self, *args, **kwargs):
+        attr = kwargs.get('attr', '__call__')
         return self.__eval(attr, *args, **kwargs)
 
     def __assert_list(self, args):
