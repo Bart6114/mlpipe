@@ -3,6 +3,9 @@ from setuptools import setup
 install_requires = [
     'dill',
     'sklearn',
+    'numpy',
+    'scipy',
+    'scikit-learn',
     ]
 
 
