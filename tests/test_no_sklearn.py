@@ -1,8 +1,9 @@
 import os
 import sys
 
-from importlib import reload
-import warnings
+if sys.version_info > (3, 3, 0):
+    from importlib import reload
+
 import mlpipe as mp
 import pytest
 
