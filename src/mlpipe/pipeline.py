@@ -110,39 +110,41 @@ class Pipe(object):
 
         if attr == 'fit':
 
-            X, y, *_ = args
+            X, y, var_args = args[0], args[1], args[2:]
 
             for i, segment in enumerate(self.segments):
 
                 if self.__is_sklearn_obj(segment.obj):
 
-                    getattr(segment, 'fit')(X, y, *_)
+                    getattr(segment, 'fit')(X, y, *var_args)
 
                     if i < len(self.segments) - 1:
-                        X = getattr(segment, 'transform')(X, *_)
+                        X = getattr(segment, 'transform')(X, *var_args)
 
                 else:
-                    X, y, *_ = getattr(segment, attr)(X, y, *_)
+                    eval_val = getattr(segment, attr)(X, y, *var_args)
+                    X, y, var_args = eval_val[0], eval_val[1], eval_val[2:]
 
             return self
 
 
         elif attr in ('predict', 'predict_log_proba', 'score', 'predict_proba', ):
 
-            X, *_ = args
+            X, var_args = args[0], args[1:]
 
             for i, segment in enumerate(self.segments):
 
                 if self.__is_sklearn_obj(segment.obj):
 
                     if i < len(self.segments) - 1:
-                        X = getattr(segment, 'transform')(X, *_)
+                        X = getattr(segment, 'transform')(X, *var_args)
 
                     else:
-                        output = getattr(segment, attr)(X, *_)
+                        output = getattr(segment, attr)(X, *var_args)
 
                 else:
-                    X, *_ = getattr(segment, attr)(X, *_)
+                    eval_val = getattr(segment, attr)(X, *var_args)
+                    X, var_args = eval_val[0], eval_val[1:]
 
 
             return output
