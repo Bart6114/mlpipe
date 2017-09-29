@@ -41,3 +41,19 @@ def test_no_input():
 
     assert p2() == 2
     assert p2(5) == 2
+
+def test_multiple_args():
+
+    def test_func(x,y):
+        return (x,y)
+
+    p = Pipe() +\
+        test_func +\
+        (lambda x, y: (x,y))
+
+    assert p(1, 2) == (1, 2)
+
+    p = Pipe() + \
+        (lambda a, b, c, d: (a, b, c, d))
+
+    assert p(1, 2, 3 ,4) == (1, 2, 3, 4)
