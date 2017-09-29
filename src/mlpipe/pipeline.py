@@ -50,7 +50,7 @@ class Pipe(object):
                 segment = Segment(segment)
 
             else:
-                raise BaseException('Cannot add non-callable objects')
+                raise Exception('Cannot add non-callable objects')
 
 
         self.segments.append(segment)
