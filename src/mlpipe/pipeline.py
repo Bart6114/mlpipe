@@ -46,11 +46,11 @@ class Pipe(object):
 
         if not isinstance(segment, Segment):
 
-            if hasattr(segment, '__call__'):
+            if hasattr(segment, '__call__') or hasattr(segment, '__init__'):
                 segment = Segment(segment)
 
             else:
-                raise "Cannot add non-callable objects"
+                raise BaseException('Cannot add non-callable objects')
 
 
         self.segments.append(segment)
@@ -151,7 +151,8 @@ class Pipe(object):
 
     def __is_sklearn_obj(self, obj):
         return issubclass(obj.__class__, (sklearn.base.BaseEstimator,
-                                          sklearn.base.TransformerMixin, ))
+                                          sklearn.base.TransformerMixin,
+                                          sklearn.base.ClassifierMixin,))
 
     @classmethod
     def _load(cls, filename):
