@@ -47,7 +47,6 @@ class Pipe(object):
         if not isinstance(segment, Segment):
             segment = Segment(segment)
 
-
         self.segments.append(segment)
         segment._set_pipe(self)
         return self
