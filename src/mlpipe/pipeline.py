@@ -190,7 +190,11 @@ class Segment(object):
         return self.description
 
     def __call__(self, *args, **kwargs):
-        return partial(self.obj, **self.kwargs)(*args, **kwargs)
+        try:
+            return partial(self.obj, **self.kwargs)(*args, **kwargs)
+        except TypeError:
+            raise TypeError("Segment '{}' object '{}' not callable".format(self.description, self.obj))
+
 
     def __getattr__(self, name):
 
