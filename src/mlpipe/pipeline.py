@@ -45,12 +45,7 @@ class Pipe(object):
         """
 
         if not isinstance(segment, Segment):
-
-            if hasattr(segment, '__call__') or hasattr(segment, '__init__'):
-                segment = Segment(segment)
-
-            else:
-                raise Exception('Cannot add non-callable objects')
+            segment = Segment(segment)
 
 
         self.segments.append(segment)
