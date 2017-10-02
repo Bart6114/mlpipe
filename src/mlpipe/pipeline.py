@@ -1,4 +1,4 @@
-from functools import partial, reduce
+from functools import partial, lru_cache
 import dill
 import warnings
 import os
@@ -31,8 +31,14 @@ class Pipe(object):
     An instance of this class can hold a number of Segments and in whole forms the pipeline.
     """
 
-    def __init__(self):
+    def __init__(self, cached=False, cache_maxsize=128):
+
+        if cached:
+            self.__eval = lru_cache(cache_maxsize)(self.__eval)
+            self.__cache_info__ = self.__eval.cache_info
+
         self.segments = []
+
     def __add__(self, segment):
         """Internal function, will be called when adding a Segment to the Pipe by using the '+' operator.
 
