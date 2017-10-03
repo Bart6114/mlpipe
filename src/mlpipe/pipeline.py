@@ -91,7 +91,7 @@ class Pipe(object):
 
         return args
 
-    def __eval(self, attr, *args):
+    def __eval(self, attr, *args, **kwargs):
 
         if attr in SKLEARN_VERBS and SKLEARN_AVAILABLE:
             # dispatch to sklearn compatible pipe evaluator
@@ -109,7 +109,7 @@ class Pipe(object):
 
         return args
 
-    def __eval_sk_style(self, attr, *args):
+    def __eval_sk_style(self, attr, *args, **kwargs):
         # todo
         # check if obj is one inheriting an sklearn class
         # if not process as regular func
