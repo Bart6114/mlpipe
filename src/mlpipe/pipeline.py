@@ -91,7 +91,7 @@ class Pipe(object):
 
         return args
 
-    def __eval(self, attr, *args, **kwargs):
+    def __eval(self, attr, *args):
 
         if attr in SKLEARN_VERBS and SKLEARN_AVAILABLE:
             # dispatch to sklearn compatible pipe evaluator
@@ -101,13 +101,11 @@ class Pipe(object):
             warnings.warn('sklearn warning: \'{}\' seems to be an sklearn verb, but sklearn is not available,'
                           'continuing processing without sklearn logic'.format(attr), UserWarning)
 
-
         for i, segment in enumerate(self.segments):
             args = getattr(segment, attr)(*args)
 
             if i < len(self.segments) - 1:
                 args = self.__assert_list(args)
-
 
         return args
 
@@ -135,7 +133,6 @@ class Pipe(object):
 
             return self
 
-
         elif attr in ('predict', 'predict_log_proba', 'score', 'predict_proba', ):
 
             X, var_args = args[0], args[1:]
@@ -153,7 +150,6 @@ class Pipe(object):
                 else:
                     eval_val = getattr(segment, attr)(X, *var_args)
                     X, var_args = eval_val[0], eval_val[1:]
-
 
             return output
 
@@ -176,8 +172,6 @@ class Pipe(object):
 
     def _dumps(self):
         return dill.dumps(self)
-
-
 
 
 class Segment(object):
@@ -209,17 +203,16 @@ class Segment(object):
         except TypeError:
             raise TypeError("Segment '{}' object '{}' not callable".format(self.description, self.obj))
 
-
     def __getattr__(self, name):
 
         if name.startswith('__') and name.endswith('__'):
             return super(Segment, self).__getattr__(name)
 
         if hasattr(self.obj, name):
-            return partial(getattr(self.obj, name),**self.kwargs)
+            return partial(getattr(self.obj, name), **self.kwargs)
         else:
             # return main object if attrs isn't found (and assume it is callable)
-            return partial(getattr(self.obj, '__call__'),  **self.kwargs)
+            return partial(getattr(self.obj, '__call__'), **self.kwargs)
 
 if __name__ == '__main__':
     pass
