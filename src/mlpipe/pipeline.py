@@ -1,7 +1,13 @@
-from functools import partial, lru_cache
-import dill
+from functools import partial
+import sys
 import warnings
 import os
+
+import dill
+
+if sys.version_info > (3, 0, 0):
+    from functools import lru_cache
+
 
 SKLEARN_VERBS = (
     'fit',
@@ -33,9 +39,11 @@ class Pipe(object):
 
     def __init__(self, cached=False, cache_maxsize=128):
 
-        if cached:
+        if cached and sys.version_info > (3, 0, 0):
             self.__eval = lru_cache(cache_maxsize)(self.__eval)
             self.__cache_info__ = self.__eval.cache_info
+        elif cached:
+            warnings.warn("Ignoring 'cached' on python versions < 3.0.0")
 
         self.segments = []
 
